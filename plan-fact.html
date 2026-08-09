@@ -745,4 +745,16 @@
 
       loadTimer = setTimeout(() => {
         showError(
-          "Время ожидания
+          "Время ожидания истекло. Обычно это значит, что таблица закрыта для просмотра по ссылке."
+        );
+      }, 15000);
+    }
+
+    projectFilter.addEventListener("change", render);
+
+    document.getElementById("reload").addEventListener("click", loadData);
+
+    loadData();
+  </script>
+</body>
+</html>
