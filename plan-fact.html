@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>План-факт анализ</title>
 
   <style>
@@ -18,7 +18,9 @@
       --orange: #ea580c;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -29,8 +31,17 @@
 
     .container {
       max-width: 1400px;
-      margin: auto;
+      margin: 0 auto;
       padding: 32px 18px 50px;
+    }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 16px;
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: bold;
+      text-decoration: none;
     }
 
     .topbar {
@@ -45,20 +56,13 @@
       font-size: 30px;
     }
 
-    .subtitle, .updated {
+    .subtitle,
+    .updated {
       color: var(--muted);
     }
 
-    .back {
-      display: inline-block;
-      margin-bottom: 12px;
-      color: var(--blue);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: bold;
-    }
-
     .updated {
+      min-width: 180px;
       text-align: right;
       font-size: 14px;
     }
@@ -69,15 +73,21 @@
       border: 0;
       border-radius: 8px;
       background: var(--blue);
-      color: #fff;
+      color: #ffffff;
       font-weight: bold;
       cursor: pointer;
     }
 
-    .filter, .card, .panel {
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .filter,
+    .card,
+    .panel {
       background: var(--panel);
       border-radius: 14px;
-      box-shadow: 0 8px 24px rgba(25, 45, 80, .08);
+      box-shadow: 0 8px 24px rgba(25, 45, 80, 0.08);
     }
 
     .filter {
@@ -99,7 +109,7 @@
       padding: 10px;
       border: 1px solid #d7ddea;
       border-radius: 8px;
-      background: #fff;
+      background: #ffffff;
       font-size: 14px;
     }
 
@@ -115,9 +125,17 @@
       border-left: 5px solid var(--blue);
     }
 
-    .card.green { border-left-color: var(--green); }
-    .card.red { border-left-color: var(--red); }
-    .card.orange { border-left-color: var(--orange); }
+    .card.green {
+      border-left-color: var(--green);
+    }
+
+    .card.red {
+      border-left-color: var(--red);
+    }
+
+    .card.orange {
+      border-left-color: var(--orange);
+    }
 
     .card-title {
       margin-bottom: 10px;
@@ -138,7 +156,6 @@
 
     .panel {
       padding: 20px;
-      margin-bottom: 22px;
     }
 
     .panel h2 {
@@ -152,12 +169,13 @@
 
     table {
       width: 100%;
-      min-width: 1080px;
+      min-width: 1100px;
       border-collapse: collapse;
       font-size: 14px;
     }
 
-    th, td {
+    th,
+    td {
       padding: 12px 10px;
       border-bottom: 1px solid var(--line);
       text-align: left;
@@ -170,13 +188,21 @@
       white-space: nowrap;
     }
 
-    td.money, td.percent {
+    td.money,
+    td.percent {
       text-align: right;
       white-space: nowrap;
     }
 
-    .positive { color: var(--green); font-weight: bold; }
-    .negative { color: var(--red); font-weight: bold; }
+    .positive {
+      color: var(--green);
+      font-weight: bold;
+    }
+
+    .negative {
+      color: var(--red);
+      font-weight: bold;
+    }
 
     .badge {
       display: inline-block;
@@ -195,22 +221,45 @@
     }
 
     .error {
-      padding: 15px;
+      padding: 16px;
       border-radius: 10px;
       background: #fef2f2;
       color: #b91c1c;
-      line-height: 1.5;
+      line-height: 1.55;
+    }
+
+    .error code {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 6px;
+      border-radius: 4px;
+      background: #fee2e2;
+      color: #991b1b;
     }
 
     @media (max-width: 950px) {
-      .cards { grid-template-columns: repeat(2, 1fr); }
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     @media (max-width: 600px) {
-      .container { padding: 20px 12px; }
-      .topbar { display: block; }
-      .updated { margin-top: 14px; text-align: left; }
-      .cards { grid-template-columns: 1fr; }
+      .container {
+        padding: 20px 12px;
+      }
+
+      .topbar {
+        display: block;
+      }
+
+      .updated {
+        margin-top: 14px;
+        text-align: left;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -222,11 +271,13 @@
     <header class="topbar">
       <div>
         <h1>План-факт анализ</h1>
-        <p class="subtitle">Сравнение плановых и фактических показателей по проектам</p>
+        <p class="subtitle">
+          Сравнение плановых и фактических показателей по проектам
+        </p>
       </div>
 
       <div class="updated">
-        <div id="updated">Загрузка данных…</div>
+        <div id="updated">Подготовка загрузки…</div>
         <button id="reload">Обновить</button>
       </div>
     </header>
@@ -324,13 +375,34 @@
     const SHEET_NAME = "План-Факт";
 
     let projects = [];
-    let loadedScript;
-    let timeout;
+    let loadedScript = null;
+    let loadTimer = null;
 
     const projectFilter = document.getElementById("projectFilter");
+    const updated = document.getElementById("updated");
+    const table = document.getElementById("table");
 
-    function cellValue(cell) {
-      return cell ? (cell.f ?? cell.v ?? "") : "";
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function getCellValue(cell) {
+      if (!cell) return "";
+      return cell.f ?? cell.v ?? "";
+    }
+
+    function normalizeText(value) {
+      return String(value || "")
+        .toLowerCase()
+        .replace(/ё/g, "е")
+        .replace(/[.:]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
     }
 
     function number(value) {
@@ -339,3 +411,338 @@
       return Number(
         String(value || 0)
           .replace(/\s/g, "")
+          .replace(",", ".")
+          .replace(/[^\d.-]/g, "")
+      ) || 0;
+    }
+
+    function money(value) {
+      return new Intl.NumberFormat("ru-RU", {
+        style: "currency",
+        currency: "RUB",
+        maximumFractionDigits: 0
+      }).format(value || 0);
+    }
+
+    function percent(value) {
+      return new Intl.NumberFormat("ru-RU", {
+        style: "percent",
+        maximumFractionDigits: 1
+      }).format(value || 0);
+    }
+
+    function sum(items, field) {
+      return items.reduce((total, item) => total + number(item[field]), 0);
+    }
+
+    function signClass(value) {
+      return value >= 0 ? "positive" : "negative";
+    }
+
+    function setValue(id, value, formatter = money, color = false) {
+      const element = document.getElementById(id);
+
+      element.textContent = formatter(value);
+
+      if (color) {
+        element.classList.remove("positive", "negative");
+        element.classList.add(signClass(value));
+      }
+    }
+
+    function getFilteredProjects() {
+      return projects.filter(item =>
+        !projectFilter.value || item.project === projectFilter.value
+      );
+    }
+
+    function findColumn(headers, variants) {
+      for (const variant of variants) {
+        const index = headers.findIndex(header =>
+          header === normalizeText(variant) ||
+          header.includes(normalizeText(variant))
+        );
+
+        if (index !== -1) return index;
+      }
+
+      return -1;
+    }
+
+    function getByColumn(cells, columnIndex) {
+      return columnIndex >= 0 ? number(getCellValue(cells[columnIndex])) : 0;
+    }
+
+    function render() {
+      const items = getFilteredProjects();
+
+      const incomePlan = sum(items, "incomePlan");
+      const incomeFact = sum(items, "incomeFact");
+      const expenseFact = sum(items, "expenseFact");
+      const grossFact = sum(items, "grossFact");
+      const operatingPlan = sum(items, "operatingPlan");
+      const operatingFact = sum(items, "operatingFact");
+
+      setValue("incomePlan", incomePlan);
+      setValue("incomeFact", incomeFact);
+      setValue("incomeDeviation", incomeFact - incomePlan, money, true);
+      setValue("expenseFact", expenseFact);
+      setValue("grossFact", grossFact, money, true);
+      setValue(
+        "grossMarginFact",
+        incomeFact ? grossFact / incomeFact : 0,
+        percent,
+        true
+      );
+      setValue("operatingFact", operatingFact, money, true);
+      setValue(
+        "operatingDeviation",
+        operatingFact - operatingPlan,
+        money,
+        true
+      );
+
+      if (!items.length) {
+        table.innerHTML = `
+          <tr>
+            <td colspan="11" class="loading">
+              Нет данных по выбранному проекту.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      table.innerHTML = items.map(item => {
+        const incomeDeviation = item.incomeFact - item.incomePlan;
+
+        return `
+          <tr>
+            <td>
+              <span class="badge">${escapeHtml(item.project)}</span>
+            </td>
+            <td class="money">${money(item.incomePlan)}</td>
+            <td class="money">${money(item.incomeFact)}</td>
+            <td class="money ${signClass(incomeDeviation)}">
+              ${money(incomeDeviation)}
+            </td>
+            <td class="money">${money(item.expensePlan)}</td>
+            <td class="money">${money(item.expenseFact)}</td>
+            <td class="money">${money(item.grossPlan)}</td>
+            <td class="money ${signClass(item.grossFact)}">
+              ${money(item.grossFact)}
+            </td>
+            <td class="percent ${signClass(item.grossMarginFact)}">
+              ${percent(item.grossMarginFact)}
+            </td>
+            <td class="money">${money(item.operatingPlan)}</td>
+            <td class="money ${signClass(item.operatingFact)}">
+              ${money(item.operatingFact)}
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function showError(message) {
+      clearTimeout(loadTimer);
+
+      updated.textContent = "Ошибка загрузки";
+
+      table.innerHTML = `
+        <tr>
+          <td colspan="11">
+            <div class="error">
+              <strong>Не удалось загрузить лист «${SHEET_NAME}».</strong><br>
+              ${escapeHtml(message)}<br><br>
+              Проверьте два пункта:<br>
+              1. Лист называется точно <code>${SHEET_NAME}</code>.<br>
+              2. Доступ к таблице: «Все, у кого есть ссылка» → «Читатель».
+            </div>
+          </td>
+        </tr>
+      `;
+    }
+
+    window.handlePlanFactData = function(response) {
+      clearTimeout(loadTimer);
+
+      try {
+        if (response.status === "error") {
+          throw new Error(response.errors?.[0]?.detailed_message ||
+            response.errors?.[0]?.message ||
+            "Google Таблица вернула ошибку.");
+        }
+
+        const rows = response.table?.rows || [];
+        const columns = response.table?.cols || [];
+
+        if (!rows.length) {
+          throw new Error("На листе нет строк с данными.");
+        }
+
+        const headers = columns.map(column => normalizeText(column.label));
+
+        const projectColumn = findColumn(headers, ["проект"]);
+        const incomePlanColumn = findColumn(headers, [
+          "план доходов",
+          "доходы план",
+          "выручка план"
+        ]);
+        const incomeFactColumn = findColumn(headers, [
+          "факт доходов",
+          "доходы факт",
+          "факт выручки",
+          "выручка факт"
+        ]);
+        const expensePlanColumn = findColumn(headers, [
+          "план расходов",
+          "расходы план"
+        ]);
+        const expenseFactColumn = findColumn(headers, [
+          "факт расходов",
+          "расходы факт"
+        ]);
+        const grossPlanColumn = findColumn(headers, [
+          "план валовой прибыли",
+          "валовая прибыль план"
+        ]);
+        const grossFactColumn = findColumn(headers, [
+          "факт валовой прибыли",
+          "валовая прибыль факт"
+        ]);
+        const grossMarginFactColumn = findColumn(headers, [
+          "факт маржа",
+          "валовая маржа факт",
+          "маржа факт"
+        ]);
+        const operatingPlanColumn = findColumn(headers, [
+          "план опер прибыли",
+          "план операционной прибыли",
+          "операционная прибыль план"
+        ]);
+        const operatingFactColumn = findColumn(headers, [
+          "факт опер прибыли",
+          "факт операционной прибыли",
+          "операционная прибыль факт"
+        ]);
+
+        if (projectColumn === -1) {
+          throw new Error(
+            "Не найден столбец «Проект». Проверьте первую строку листа."
+          );
+        }
+
+        projects = rows
+          .map(row => {
+            const cells = row.c || [];
+            const project = String(getCellValue(cells[projectColumn])).trim();
+
+            const incomePlan = getByColumn(cells, incomePlanColumn);
+            const incomeFact = getByColumn(cells, incomeFactColumn);
+            const expensePlan = getByColumn(cells, expensePlanColumn);
+            const expenseFact = getByColumn(cells, expenseFactColumn);
+            const grossPlan = getByColumn(cells, grossPlanColumn);
+            const grossFact = getByColumn(cells, grossFactColumn);
+            const operatingPlan = getByColumn(cells, operatingPlanColumn);
+            const operatingFact = getByColumn(cells, operatingFactColumn);
+
+            const marginValue = getByColumn(cells, grossMarginFactColumn);
+
+            return {
+              project,
+              incomePlan,
+              incomeFact,
+              expensePlan,
+              expenseFact,
+              grossPlan,
+              grossFact,
+              grossMarginFact: marginValue > 1 ? marginValue / 100 : marginValue,
+              operatingPlan,
+              operatingFact
+            };
+          })
+          .filter(item =>
+            item.project &&
+            normalizeText(item.project) !== "проект" &&
+            (
+              item.incomePlan ||
+              item.incomeFact ||
+              item.expensePlan ||
+              item.expenseFact ||
+              item.grossPlan ||
+              item.grossFact ||
+              item.operatingPlan ||
+              item.operatingFact
+            )
+          );
+
+        if (!projects.length) {
+          throw new Error(
+            "Не найдены проекты с финансовыми значениями. Проверьте, что в листе есть строки с цифрами."
+          );
+        }
+
+        projects.sort((a, b) =>
+          a.project.localeCompare(b.project, "ru")
+        );
+
+        projectFilter.innerHTML = `
+          <option value="">Все проекты</option>
+        `;
+
+        projects.forEach(item => {
+          projectFilter.add(new Option(item.project, item.project));
+        });
+
+        render();
+
+        updated.textContent =
+          "Обновлено: " + new Date().toLocaleString("ru-RU");
+      } catch (error) {
+        console.error(error);
+        showError(error.message);
+      }
+    };
+
+    function loadData() {
+      clearTimeout(loadTimer);
+
+      updated.textContent = "Загрузка данных…";
+
+      table.innerHTML = `
+        <tr>
+          <td colspan="11" class="loading">
+            Загрузка данных из Google Таблицы…
+          </td>
+        </tr>
+      `;
+
+      if (loadedScript) {
+        loadedScript.remove();
+      }
+
+      loadedScript = document.createElement("script");
+
+      const url =
+        "https://docs.google.com/spreadsheets/d/" +
+        SHEET_ID +
+        "/gviz/tq?sheet=" +
+        encodeURIComponent(SHEET_NAME) +
+        "&range=A:Z" +
+        "&tqx=out:json;responseHandler:handlePlanFactData" +
+        "&cache=" + Date.now();
+
+      loadedScript.src = url;
+
+      loadedScript.onerror = function() {
+        showError(
+          "Браузер не получил ответ от Google Таблицы. Проверьте доступ по ссылке."
+        );
+      };
+
+      document.body.appendChild(loadedScript);
+
+      loadTimer = setTimeout(() => {
+        showError(
+          "Время ожидания
