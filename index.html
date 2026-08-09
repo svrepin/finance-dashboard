@@ -1,27 +1,741 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Финансовый дашборд</title>
-<style>
-:root{--bg:#f4f7fb;--panel:#fff;--text:#172033;--muted:#667085;--line:#e7ebf2;--blue:#2563eb;--green:#16a34a;--red:#dc2626;--orange:#ea580c}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}.container{max-width:1320px;margin:auto;padding:32px 18px 50px}.top{display:flex;justify-content:space-between;gap:20px;margin-bottom:24px}h1{margin:0 0 8px;font-size:30px}.sub,.updated{color:var(--muted)}.updated{text-align:right;font-size:14px}.refresh{margin-top:8px;border:0;border-radius:8px;padding:9px 14px;background:var(--blue);color:#fff;font-weight:bold;cursor:pointer}.filters,.card,.panel{background:var(--panel);border-radius:14px;box-shadow:0 8px 24px rgba(25,45,80,.08)}.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:18px;margin-bottom:22px}label{display:block;margin-bottom:7px;color:var(--muted);font-size:13px;font-weight:bold}select{width:100%;padding:10px;border:1px solid #d7ddea;border-radius:8px;background:#fff;font-size:14px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}.card{padding:20px;border-left:5px solid var(--blue)}.green{border-left-color:var(--green)}.red{border-left-color:var(--red)}.orange{border-left-color:var(--orange)}.title{margin-bottom:10px;color:var(--muted);font-size:14px}.value{font-size:26px;font-weight:bold}.note{margin-top:8px;color:var(--muted);font-size:12px}.grid{display:grid;grid-template-columns:1.25fr .75fr;gap:22px;margin-bottom:22px}.panel{padding:20px;overflow:hidden}.panel h2{margin:0 0 16px;font-size:18px}.row{display:grid;grid-template-columns:105px 1fr 105px;gap:10px;align-items:center;margin:13px 0;font-size:14px}.label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bg{height:12px;background:#edf1f7;border-radius:20px;overflow:hidden}.bar{height:100%;min-width:2px;background:var(--blue);border-radius:20px}.bar.green{background:var(--green)}.bar.red{background:var(--red)}.bar.orange{background:var(--orange)}.amount{text-align:right;font-size:13px;font-weight:bold}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:12px 9px;border-bottom:1px solid var(--line);text-align:left}th{font-size:12px;text-transform:uppercase;color:var(--muted)}td.right{text-align:right;font-weight:bold;white-space:nowrap}.income{color:var(--green)}.expense{color:var(--red)}.status{display:inline-block;border-radius:99px;padding:5px 8px;background:#eef2ff;color:#4338ca;font-size:12px;font-weight:bold}.loading{text-align:center;color:var(--muted);padding:35px 10px}.error{background:#fef2f2;color:#b91c1c;border-radius:10px;padding:15px;line-height:1.5}@media(max-width:950px){.cards{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}@media(max-width:600px){.container{padding:20px 12px}.top{display:block}.updated{text-align:left;margin-top:14px}.cards,.filters{grid-template-columns:1fr}.scroll{overflow:auto}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Финансовый дашборд</title>
+
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --panel: #fff;
+      --text: #172033;
+      --muted: #667085;
+      --line: #e7ebf2;
+      --blue: #2563eb;
+      --green: #16a34a;
+      --red: #dc2626;
+      --orange: #ea580c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .container {
+      max-width: 1320px;
+      margin: auto;
+      padding: 32px 18px 50px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+
+    .sub, .updated { color: var(--muted); }
+
+    .updated {
+      text-align: right;
+      font-size: 14px;
+    }
+
+    .refresh {
+      margin-top: 8px;
+      padding: 9px 14px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .filters, .card, .panel {
+      background: var(--panel);
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(25, 45, 80, .08);
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      padding: 18px;
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #d7ddea;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 14px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .card {
+      padding: 20px;
+      border-left: 5px solid var(--blue);
+    }
+
+    .card.green { border-left-color: var(--green); }
+    .card.red { border-left-color: var(--red); }
+    .card.orange { border-left-color: var(--orange); }
+
+    .title {
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .value {
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    .note {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 22px;
+      margin-bottom: 22px;
+    }
+
+    .panel {
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .panel h2 {
+      margin: 0 0 16px;
+      font-size: 18px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 105px 1fr 105px;
+      gap: 10px;
+      align-items: center;
+      margin: 13px 0;
+      font-size: 14px;
+    }
+
+    .label {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bg {
+      height: 12px;
+      background: #edf1f7;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .bar {
+      height: 100%;
+      min-width: 2px;
+      background: var(--blue);
+      border-radius: 20px;
+    }
+
+    .bar.green { background: var(--green); }
+    .bar.red { background: var(--red); }
+    .bar.orange { background: var(--orange); }
+
+    .amount {
+      text-align: right;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 12px 9px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+    }
+
+    th {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    td.right {
+      text-align: right;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .income { color: var(--green); }
+    .expense { color: var(--red); }
+
+    .status {
+      display: inline-block;
+      border-radius: 99px;
+      padding: 5px 8px;
+      background: #eef2ff;
+      color: #4338ca;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .loading {
+      text-align: center;
+      color: var(--muted);
+      padding: 35px 10px;
+    }
+
+    .error {
+      background: #fef2f2;
+      color: #b91c1c;
+      border-radius: 10px;
+      padding: 15px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 950px) {
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      .filters { grid-template-columns: repeat(2, 1fr); }
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 20px 12px; }
+      .top { display: block; }
+      .updated { text-align: left; margin-top: 14px; }
+      .cards, .filters { grid-template-columns: 1fr; }
+      .scroll { overflow: auto; }
+    }
+  </style>
 </head>
-<body><main class="container">
-<header class="top"><div><h1>Финансовый дашборд</h1><p class="sub">Данные автоматически загружаются из Google Таблицы</p></div><div class="updated"><div id="updated">Загрузка данных…</div><button class="refresh" id="reload">Обновить</button></div></header>
-<section class="filters"><div><label>Проект</label><select id="project"><option value="">Все проекты</option></select></div><div><label>Месяц</label><select id="month"><option value="">Все месяцы</option></select></div><div><label>Менеджер</label><select id="manager"><option value="">Все менеджеры</option></select></div><div><label>Контрагент</label><select id="counterparty"><option value="">Все контрагенты</option></select></div></section>
-<section class="cards"><article class="card green"><div class="title">Фактическая выручка</div><div class="value" id="revenue">—</div><div class="note">Доходные операции</div></article><article class="card red"><div class="title">Фактические расходы</div><div class="value" id="expenses">—</div><div class="note">Все расходные операции</div></article><article class="card"><div class="title">Валовая прибыль</div><div class="value" id="gross">—</div><div class="note">Выручка минус прямые расходы</div></article><article class="card orange"><div class="title">Операционная прибыль</div><div class="value" id="operating">—</div><div class="note">После операционных расходов</div></article><article class="card"><div class="title">Чистый денежный поток</div><div class="value" id="cash">—</div><div class="note">Поступления минус выплаты</div></article><article class="card orange"><div class="title">Дебиторская задолженность</div><div class="value" id="receivable">—</div><div class="note">Остаток к получению</div></article><article class="card red"><div class="title">Кредиторская задолженность</div><div class="value" id="payable">—</div><div class="note">Остаток к оплате</div></article><article class="card green"><div class="title">Количество операций</div><div class="value" id="count">—</div><div class="note">С учётом фильтров</div></article></section>
-<section class="grid"><article class="panel"><h2>Чистый результат по месяцам</h2><div id="months"></div></article><article class="panel"><h2>Топ статей расходов</h2><div id="articles"></div></article></section><section class="grid"><article class="panel"><h2>Топ проектов по выручке</h2><div id="projects"></div></article><article class="panel"><h2>Задолженность</h2><div id="debts"></div></article></section>
-<section class="panel"><h2>Последние операции</h2><div class="scroll"><table><thead><tr><th>Дата</th><th>Проект</th><th>Контрагент</th><th>Тип</th><th>Статья</th><th>Статус</th><th>Сумма, ₽</th></tr></thead><tbody id="table"><tr><td colspan="7" class="loading">Загрузка операций…</td></tr></tbody></table></div></section></main>
-<script>
-const ID='1TWE3DyK_leji6OBbgaRs0UMxrNiknj-GiERXWbhJQAk',SHEET='Операции',MONTHS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];let ops=[],script,timer;
-const F={project:document.querySelector('#project'),month:document.querySelector('#month'),manager:document.querySelector('#manager'),counterparty:document.querySelector('#counterparty')};
-const val=c=>c?(c.f??c.v??''):'';const num=x=>typeof x==='number'?x:Number(String(x||0).replace(/\s/g,'').replace(',','.').replace(/[^\d.-]/g,''))||0;const money=x=>new Intl.NumberFormat('ru-RU',{style:'currency',currency:'RUB',maximumFractionDigits:0}).format(x||0);const short=x=>Math.abs(x)>=1e6?(x/1e6).toLocaleString('ru-RU',{maximumFractionDigits:1})+' млн ₽':Math.abs(x)>=1e3?(x/1e3).toLocaleString('ru-RU',{maximumFractionDigits:0})+' тыс. ₽':money(x);
-function date(x){let m=String(x).match(/Date\((\d+),(\d+),(\d+)\)/);return m?new Date(+m[1],+m[2],+m[3]).toLocaleDateString('ru-RU'):String(x||'')};function uniq(a){return [...new Set(a.filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'ru'))}function fill(s,a){let old=s.value,first=s.options[0].outerHTML;s.innerHTML=first;a.forEach(x=>s.add(new Option(x,x)));s.value=old}
-function selected(){return ops.filter(x=>(!F.project.value||x.project===F.project.value)&&(!F.month.value||x.month===F.month.value)&&(!F.manager.value||x.manager===F.manager.value)&&(!F.counterparty.value||x.counterparty===F.counterparty.value))}function sum(a,test,field='rub'){return a.filter(test).reduce((s,x)=>s+num(x[field]),0)}function group(a,key,test){let r={};a.filter(test).forEach(x=>r[x[key]||'Без категории']=(r[x[key]||'Без категории']||0)+x.rub);return Object.entries(r).map(([name,amount])=>({name,amount})).sort((a,b)=>b.amount-a.amount)}
-function bars(id,rows,color){let el=document.querySelector('#'+id);if(!rows.length){el.innerHTML='<p class="loading">Нет данных.</p>';return}let max=Math.max(...rows.map(x=>x.amount),1);el.innerHTML=rows.map(x=>`<div class="row"><div class="label" title="${x.name}">${x.name}</div><div class="bg"><div class="bar ${color}" style="width:${x.amount/max*100}%"></div></div><div class="amount">${short(x.amount)}</div></div>`).join('')}
-function render(){let a=selected(),revenue=sum(a,x=>x.type==='Доход'),expenses=sum(a,x=>x.type==='Расход'),direct=sum(a,x=>x.type==='Расход'&&['Закупки и себестоимость','Логистика и склад'].includes(x.category)),oper=expenses-direct,received=sum(a,x=>x.type==='Доход','paid'),paid=sum(a,x=>x.type==='Расход','paid'),rec=sum(a,x=>x.type==='Доход','balance'),pay=sum(a,x=>x.type==='Расход','balance');[['revenue',revenue],['expenses',expenses],['gross',revenue-direct],['operating',revenue-direct-oper],['cash',received-paid],['receivable',rec],['payable',pay],['count',a.length]].forEach(([id,v])=>document.querySelector('#'+id).textContent=id==='count'?v.toLocaleString('ru-RU'):money(v));bars('months',MONTHS.map(m=>({name:m.slice(0,3)+'.',amount:Math.abs(sum(a,x=>x.month===m&&x.type==='Доход')-sum(a,x=>x.month===m&&x.type==='Расход'))})).filter(x=>x.amount),'green');bars('articles',group(a,'article',x=>x.type==='Расход').slice(0,5),'red');bars('projects',group(a,'project',x=>x.type==='Доход').slice(0,5),'green');bars('debts',[{name:'Дебиторская',amount:rec},{name:'Кредиторская',amount:pay}].filter(x=>x.amount),'orange');let latest=[...a].sort((x,y)=>String(y.rawDate).localeCompare(String(x.rawDate))).slice(0,15);document.querySelector('#table').innerHTML=latest.length?latest.map(x=>`<tr><td>${x.date||'—'}</td><td>${x.project||'—'}</td><td>${x.counterparty||'—'}</td><td class="${x.type==='Доход'?'income':'expense'}">${x.type}</td><td>${x.article||'—'}</td><td><span class="status">${x.status||'—'}</span></td><td class="right ${x.type==='Доход'?'income':'expense'}">${x.type==='Доход'?'+':'−'} ${money(x.rub)}</td></tr>`).join(''):'<tr><td colspan="7" class="loading">Нет операций по выбранным фильтрам.</td></tr>'}
-function error(t){let h=`<div class="error"><strong>Не удалось загрузить данные.</strong><br>${t}<br><br>Проверьте, что в Google Таблице включено: «Все, у кого есть ссылка» → «Читатель», а лист называется «Операции».</div>`;['months','articles','projects','debts'].forEach(id=>document.querySelector('#'+id).innerHTML=h);document.querySelector('#table').innerHTML=`<tr><td colspan="7">${h}</td></tr>`;document.querySelector('#updated').textContent='Ошибка загрузки'}
-window.handleSheetData=function(r){clearTimeout(timer);try{ops=(r.table.rows||[]).map(z=>{let c=z.c||[];return{id:val(c[0]),rawDate:val(c[1]),date:date(val(c[1])),month:val(c[2]),project:val(c[4]),counterparty:val(c[5]),type:val(c[6]),category:val(c[7]),article:val(c[8]),plan:val(c[10]),rub:num(val(c[17])),status:val(c[21]),paid:num(val(c[22])),balance:num(val(c[23])),manager:val(c[24])}}).filter(x=>x.id&&['Доход','Расход'].includes(x.type)&&x.plan==='Факт');if(!ops.length)throw Error('На листе «Операции» не найдены строки со значениями «Доход» или «Расход» и «Факт».');fill(F.project,uniq(ops.map(x=>x.project)));fill(F.month,MONTHS.filter(m=>ops.some(x=>x.month===m)));fill(F.manager,uniq(ops.map(x=>x.manager)));fill(F.counterparty,uniq(ops.map(x=>x.counterparty)));render();document.querySelector('#updated').textContent='Обновлено: '+new Date().toLocaleString('ru-RU')}catch(e){console.error(e);error(e.message)}};
-function load(){document.querySelector('#updated').textContent='Загрузка данных…';if(script)script.remove();script=document.createElement('script');script.src=`https://docs.google.com/spreadsheets/d/${ID}/gviz/tq?sheet=${encodeURIComponent(SHEET)}&tqx=out:json;responseHandler:handleSheetData&cache=${Date.now()}`;script.onerror=()=>error('Google Таблица не вернула ответ.');document.body.append(script);timer=setTimeout(()=>error('Время ожидания ответа Google Таблицы истекло.'),12000)}Object.values(F).forEach(x=>x.addEventListener('change',render));document.querySelector('#reload').onclick=load;load();
-</script></body></html>
+
+<body>
+  <main class="container">
+    <header class="top">
+      <div>
+        <h1>Финансовый дашборд</h1>
+        <p class="sub">Данные автоматически загружаются из Google Таблицы</p>
+      </div>
+
+      <div class="updated">
+        <div id="updated">Загрузка данных…</div>
+        <button class="refresh" id="reload">Обновить</button>
+      </div>
+    </header>
+
+    <section class="filters">
+      <div>
+        <label for="project">Проект</label>
+        <select id="project"><option value="">Все проекты</option></select>
+      </div>
+
+      <div>
+        <label for="month">Месяц</label>
+        <select id="month"><option value="">Все месяцы</option></select>
+      </div>
+
+      <div>
+        <label for="manager">Менеджер</label>
+        <select id="manager"><option value="">Все менеджеры</option></select>
+      </div>
+
+      <div>
+        <label for="counterparty">Контрагент</label>
+        <select id="counterparty"><option value="">Все контрагенты</option></select>
+      </div>
+    </section>
+
+    <section class="cards">
+      <article class="card green">
+        <div class="title">Фактическая выручка</div>
+        <div class="value" id="revenue">—</div>
+        <div class="note">Доходные операции</div>
+      </article>
+
+      <article class="card red">
+        <div class="title">Фактические расходы</div>
+        <div class="value" id="expenses">—</div>
+        <div class="note">Все расходные операции</div>
+      </article>
+
+      <article class="card">
+        <div class="title">Валовая прибыль</div>
+        <div class="value" id="gross">—</div>
+        <div class="note">Выручка минус прямые расходы</div>
+      </article>
+
+      <article class="card orange">
+        <div class="title">Операционная прибыль</div>
+        <div class="value" id="operating">—</div>
+        <div class="note">После операционных расходов</div>
+      </article>
+
+      <article class="card">
+        <div class="title">Чистый денежный поток</div>
+        <div class="value" id="cash">—</div>
+        <div class="note">Поступления минус выплаты</div>
+      </article>
+
+      <article class="card orange">
+        <div class="title">Дебиторская задолженность</div>
+        <div class="value" id="receivable">—</div>
+        <div class="note">Остаток к получению</div>
+      </article>
+
+      <article class="card red">
+        <div class="title">Кредиторская задолженность</div>
+        <div class="value" id="payable">—</div>
+        <div class="note">Остаток к оплате</div>
+      </article>
+
+      <article class="card green">
+        <div class="title">Количество операций</div>
+        <div class="value" id="count">—</div>
+        <div class="note">С учётом фильтров</div>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="panel">
+        <h2>Чистый результат по месяцам</h2>
+        <div id="months"></div>
+      </article>
+
+      <article class="panel">
+        <h2>Топ статей расходов</h2>
+        <div id="articles"></div>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="panel">
+        <h2>Топ проектов по выручке</h2>
+        <div id="projects"></div>
+      </article>
+
+      <article class="panel">
+        <h2>Задолженность</h2>
+        <div id="debts"></div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>Последние операции</h2>
+
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Дата</th>
+              <th>Проект</th>
+              <th>Контрагент</th>
+              <th>Тип</th>
+              <th>Статья</th>
+              <th>Статус</th>
+              <th>Сумма, ₽</th>
+            </tr>
+          </thead>
+
+          <tbody id="table">
+            <tr>
+              <td colspan="7" class="loading">Загрузка операций…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const SHEET_ID = "1TWE3DyK_leji6OBbgaRs0UMxrNiknj-GiERXWbhJQAk";
+    const SHEET_NAME = "Операции";
+
+    const MONTHS = [
+      "Январь", "Февраль", "Март", "Апрель",
+      "Май", "Июнь", "Июль", "Август",
+      "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+    ];
+
+    let operations = [];
+    let loadedScript;
+    let timer;
+
+    const filters = {
+      project: document.querySelector("#project"),
+      month: document.querySelector("#month"),
+      manager: document.querySelector("#manager"),
+      counterparty: document.querySelector("#counterparty")
+    };
+
+    function getCell(cell) {
+      return cell ? (cell.f ?? cell.v ?? "") : "";
+    }
+
+    function number(value) {
+      if (typeof value === "number") return value;
+
+      return Number(
+        String(value || 0)
+          .replace(/\s/g, "")
+          .replace(",", ".")
+          .replace(/[^\d.-]/g, "")
+      ) || 0;
+    }
+
+    function money(value) {
+      return new Intl.NumberFormat("ru-RU", {
+        style: "currency",
+        currency: "RUB",
+        maximumFractionDigits: 0
+      }).format(value || 0);
+    }
+
+    function shortMoney(value) {
+      if (Math.abs(value) >= 1000000) {
+        return (value / 1000000).toLocaleString("ru-RU", {
+          maximumFractionDigits: 1
+        }) + " млн ₽";
+      }
+
+      if (Math.abs(value) >= 1000) {
+        return (value / 1000).toLocaleString("ru-RU", {
+          maximumFractionDigits: 0
+        }) + " тыс. ₽";
+      }
+
+      return money(value);
+    }
+
+    function formatDate(value) {
+      const match = String(value).match(/Date\((\d+),(\d+),(\d+)\)/);
+
+      if (match) {
+        return new Date(
+          Number(match[1]),
+          Number(match[2]),
+          Number(match[3])
+        ).toLocaleDateString("ru-RU");
+      }
+
+      return String(value || "");
+    }
+
+    function unique(values) {
+      return [...new Set(values.filter(Boolean))].sort((a, b) =>
+        String(a).localeCompare(String(b), "ru")
+      );
+    }
+
+    function fillSelect(select, values) {
+      const savedValue = select.value;
+      const firstOption = select.options[0].outerHTML;
+
+      select.innerHTML = firstOption;
+
+      values.forEach(value => {
+        select.add(new Option(value, value));
+      });
+
+      select.value = savedValue;
+    }
+
+    function filtered() {
+      return operations.filter(item =>
+        (!filters.project.value || item.project === filters.project.value) &&
+        (!filters.month.value || item.month === filters.month.value) &&
+        (!filters.manager.value || item.manager === filters.manager.value) &&
+        (!filters.counterparty.value || item.counterparty === filters.counterparty.value)
+      );
+    }
+
+    function sum(items, condition, field = "rub") {
+      return items
+        .filter(condition)
+        .reduce((total, item) => total + number(item[field]), 0);
+    }
+
+    function group(items, field, condition) {
+      const result = {};
+
+      items.filter(condition).forEach(item => {
+        const key = item[field] || "Без категории";
+        result[key] = (result[key] || 0) + item.rub;
+      });
+
+      return Object.entries(result)
+        .map(([name, amount]) => ({ name, amount }))
+        .sort((a, b) => b.amount - a.amount);
+    }
+
+    function renderBars(id, rows, color) {
+      const element = document.querySelector("#" + id);
+
+      if (!rows.length) {
+        element.innerHTML = "<p class='loading'>Нет данных.</p>";
+        return;
+      }
+
+      const maximum = Math.max(...rows.map(row => row.amount), 1);
+
+      element.innerHTML = rows.map(row => `
+        <div class="row">
+          <div class="label" title="${row.name}">${row.name}</div>
+          <div class="bg">
+            <div class="bar ${color}" style="width:${row.amount / maximum * 100}%"></div>
+          </div>
+          <div class="amount">${shortMoney(row.amount)}</div>
+        </div>
+      `).join("");
+    }
+
+    function render() {
+      const items = filtered();
+
+      const revenue = sum(items, item => item.type === "Доход");
+      const expenses = sum(items, item => item.type === "Расход");
+
+      const directExpenses = sum(items, item =>
+        item.type === "Расход" &&
+        ["Закупки и себестоимость", "Логистика и склад"].includes(item.category)
+      );
+
+      const operatingExpenses = expenses - directExpenses;
+
+      const received = sum(items, item => item.type === "Доход", "paid");
+      const paid = sum(items, item => item.type === "Расход", "paid");
+
+      const receivable = sum(items, item => item.type === "Доход", "balance");
+      const payable = sum(items, item => item.type === "Расход", "balance");
+
+      document.querySelector("#revenue").textContent = money(revenue);
+      document.querySelector("#expenses").textContent = money(expenses);
+      document.querySelector("#gross").textContent = money(revenue - directExpenses);
+      document.querySelector("#operating").textContent =
+        money(revenue - directExpenses - operatingExpenses);
+      document.querySelector("#cash").textContent = money(received - paid);
+      document.querySelector("#receivable").textContent = money(receivable);
+      document.querySelector("#payable").textContent = money(payable);
+      document.querySelector("#count").textContent =
+        items.length.toLocaleString("ru-RU");
+
+      renderBars(
+        "months",
+        MONTHS.map(month => {
+          const income = sum(items, item =>
+            item.month === month && item.type === "Доход"
+          );
+
+          const expense = sum(items, item =>
+            item.month === month && item.type === "Расход"
+          );
+
+          return {
+            name: month.slice(0, 3) + ".",
+            amount: Math.abs(income - expense)
+          };
+        }).filter(item => item.amount > 0),
+        "green"
+      );
+
+      renderBars(
+        "articles",
+        group(items, "article", item => item.type === "Расход").slice(0, 5),
+        "red"
+      );
+
+      renderBars(
+        "projects",
+        group(items, "project", item => item.type === "Доход").slice(0, 5),
+        "green"
+      );
+
+      renderBars(
+        "debts",
+        [
+          { name: "Дебиторская", amount: receivable },
+          { name: "Кредиторская", amount: payable }
+        ].filter(item => item.amount > 0),
+        "orange"
+      );
+
+      const latest = [...items]
+        .sort((a, b) => String(b.rawDate).localeCompare(String(a.rawDate)))
+        .slice(0, 15);
+
+      document.querySelector("#table").innerHTML = latest.length
+        ? latest.map(item => `
+          <tr>
+            <td>${item.date || "—"}</td>
+            <td>${item.project || "—"}</td>
+            <td>${item.counterparty || "—"}</td>
+            <td class="${item.type === "Доход" ? "income" : "expense"}">
+              ${item.type}
+            </td>
+            <td>${item.article || "—"}</td>
+            <td><span class="status">${item.status || "—"}</span></td>
+            <td class="right ${item.type === "Доход" ? "income" : "expense"}">
+              ${item.type === "Доход" ? "+" : "−"} ${money(item.rub)}
+            </td>
+          </tr>
+        `).join("")
+        : `<tr><td colspan="7" class="loading">Нет операций по выбранным фильтрам.</td></tr>`;
+    }
+
+    function showError(message) {
+      const html = `
+        <div class="error">
+          <strong>Не удалось загрузить данные.</strong><br>
+          ${message}<br><br>
+          Убедитесь, что в Google Таблице включено:
+          «Все, у кого есть ссылка» → «Читатель».
+        </div>
+      `;
+
+      ["months", "articles", "projects", "debts"].forEach(id => {
+        document.querySelector("#" + id).innerHTML = html;
+      });
+
+      document.querySelector("#table").innerHTML =
+        `<tr><td colspan="7">${html}</td></tr>`;
+
+      document.querySelector("#updated").textContent = "Ошибка загрузки";
+    }
+
+    window.handleSheetData = function(response) {
+      clearTimeout(timer);
+
+      try {
+        operations = (response.table.rows || [])
+          .map(row => {
+            const cells = row.c || [];
+
+            return {
+              id: getCell(cells[0]),
+              rawDate: getCell(cells[1]),
+              date: formatDate(getCell(cells[1])),
+              month: getCell(cells[2]),
+              project: getCell(cells[4]),
+              counterparty: getCell(cells[5]),
+              type: getCell(cells[6]),
+              category: getCell(cells[7]),
+              article: getCell(cells[8]),
+              planFact: getCell(cells[10]),
+              rub: number(getCell(cells[17])),
+              status: getCell(cells[21]),
+              paid: number(getCell(cells[22])),
+              balance: number(getCell(cells[23])),
+              manager: getCell(cells[24])
+            };
+          })
+          .filter(item =>
+            item.id &&
+            ["Доход", "Расход"].includes(item.type) &&
+            item.planFact === "Факт"
+          );
+
+        if (!operations.length) {
+          throw new Error(
+            "На листе «Операции» не найдены строки с типом «Доход»/«Расход» и значением «Факт»."
+          );
+        }
+
+        fillSelect(filters.project, unique(operations.map(item => item.project)));
+
+        fillSelect(
+          filters.month,
+          MONTHS.filter(month => operations.some(item => item.month === month))
+        );
+
+        fillSelect(filters.manager, unique(operations.map(item => item.manager)));
+        fillSelect(
+          filters.counterparty,
+          unique(operations.map(item => item.counterparty))
+        );
+
+        render();
+
+        document.querySelector("#updated").textContent =
+          "Обновлено: " + new Date().toLocaleString("ru-RU");
+      } catch (error) {
+        console.error(error);
+        showError(error.message);
+      }
+    };
+
+    function loadData() {
+      document.querySelector("#updated").textContent = "Загрузка данных…";
+
+      if (loadedScript) loadedScript.remove();
+
+      loadedScript = document.createElement("script");
+
+      loadedScript.src =
+        "https://docs.google.com/spreadsheets/d/" +
+        SHEET_ID +
+        "/gviz/tq?sheet=" +
+        encodeURIComponent(SHEET_NAME) +
+        "&tqx=out:json;responseHandler:handleSheetData" +
+        "&cache=" + Date.now();
+
+      loadedScript.onerror = function() {
+        showError("Google Таблица не вернула ответ.");
+      };
+
+      document.body.appendChild(loadedScript);
+
+      timer = setTimeout(() => {
+        showError("Время ожидания ответа от Google Таблицы истекло.");
+      }, 12000);
+    }
+
+    Object.values(filters).forEach(select => {
+      select.addEventListener("change", render);
+    });
+
+    document.querySelector("#reload").addEventListener("click", loadData);
+
+    loadData();
+  </script>
+</body>
+</html>
