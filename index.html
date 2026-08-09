@@ -16,12 +16,10 @@
       --green: #16a34a;
       --red: #dc2626;
       --orange: #ea580c;
-      --shadow: 0 8px 24px rgba(25, 45, 80, .08);
+      --shadow: 0 8px 24px rgba(25, 45, 80, 0.08);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -58,27 +56,25 @@
       color: var(--muted);
       font-size: 14px;
       text-align: right;
-      line-height: 1.55;
+      line-height: 1.5;
     }
 
     .refresh {
       margin-top: 8px;
+      padding: 9px 14px;
       border: 0;
       border-radius: 8px;
-      padding: 9px 12px;
-      cursor: pointer;
-      color: white;
       background: var(--blue);
+      color: white;
+      cursor: pointer;
       font-weight: bold;
     }
 
-    .refresh:hover {
-      background: #1d4ed8;
-    }
+    .refresh:hover { background: #1d4ed8; }
 
     .filters,
-    .panel,
-    .card {
+    .card,
+    .panel {
       background: var(--panel);
       border-radius: 14px;
       box-shadow: var(--shadow);
@@ -127,13 +123,13 @@
     .card.orange { border-left-color: var(--orange); }
 
     .card-title {
+      margin-bottom: 10px;
       color: var(--muted);
       font-size: 14px;
-      margin-bottom: 10px;
     }
 
     .card-value {
-      font-size: 27px;
+      font-size: 26px;
       font-weight: 700;
       line-height: 1.15;
     }
@@ -146,7 +142,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: 1.25fr .75fr;
+      grid-template-columns: 1.25fr 0.75fr;
       gap: 22px;
       margin-bottom: 22px;
     }
@@ -157,13 +153,13 @@
     }
 
     .panel h2 {
-      font-size: 18px;
       margin: 0 0 16px;
+      font-size: 18px;
     }
 
     .chart-row {
       display: grid;
-      grid-template-columns: 85px 1fr 100px;
+      grid-template-columns: 100px 1fr 105px;
       align-items: center;
       gap: 10px;
       margin: 13px 0;
@@ -179,8 +175,8 @@
     .bar-bg {
       height: 12px;
       overflow: hidden;
-      background: #edf1f7;
       border-radius: 100px;
+      background: #edf1f7;
     }
 
     .bar {
@@ -208,8 +204,8 @@
 
     th, td {
       padding: 12px 9px;
-      text-align: left;
       border-bottom: 1px solid var(--line);
+      text-align: left;
       vertical-align: middle;
     }
 
@@ -225,78 +221,45 @@
       font-weight: bold;
     }
 
-    .income {
-      color: var(--green);
-    }
-
-    .expense {
-      color: var(--red);
-    }
+    .income { color: var(--green); }
+    .expense { color: var(--red); }
 
     .status {
       display: inline-block;
       padding: 5px 8px;
       border-radius: 99px;
-      font-size: 12px;
-      font-weight: bold;
       background: #eef2ff;
       color: #4338ca;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .loading {
+      padding: 35px 10px;
+      color: var(--muted);
+      text-align: center;
     }
 
     .error {
-      padding: 18px;
+      padding: 15px;
       border-radius: 10px;
       background: #fef2f2;
       color: #b91c1c;
       line-height: 1.5;
     }
 
-    .loading {
-      padding: 50px 15px;
-      text-align: center;
-      color: var(--muted);
-    }
-
     @media (max-width: 950px) {
-      .cards {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .filters {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      .filters { grid-template-columns: repeat(2, 1fr); }
+      .grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 600px) {
-      .container {
-        padding: 20px 12px 35px;
-      }
-
-      .topbar {
-        display: block;
-      }
-
-      .updated {
-        text-align: left;
-        margin-top: 15px;
-      }
-
-      .cards,
-      .filters {
-        grid-template-columns: 1fr;
-      }
-
-      .card-value {
-        font-size: 24px;
-      }
-
-      .table-scroll {
-        overflow-x: auto;
-      }
+      .container { padding: 20px 12px 35px; }
+      .topbar { display: block; }
+      .updated { margin-top: 14px; text-align: left; }
+      .cards, .filters { grid-template-columns: 1fr; }
+      .table-scroll { overflow-x: auto; }
     }
   </style>
 </head>
@@ -311,7 +274,7 @@
 
       <div class="updated">
         <div id="updated">Загрузка данных…</div>
-        <button class="refresh" id="refreshButton">Обновить</button>
+        <button id="refreshButton" class="refresh">Обновить</button>
       </div>
     </header>
 
@@ -348,49 +311,49 @@
     <section class="cards">
       <article class="card green">
         <div class="card-title">Фактическая выручка</div>
-        <div class="card-value" id="revenue">—</div>
+        <div id="revenue" class="card-value">—</div>
         <div class="card-note">Доходные операции</div>
       </article>
 
       <article class="card red">
         <div class="card-title">Фактические расходы</div>
-        <div class="card-value" id="expenses">—</div>
+        <div id="expenses" class="card-value">—</div>
         <div class="card-note">Все расходные операции</div>
       </article>
 
       <article class="card">
         <div class="card-title">Валовая прибыль</div>
-        <div class="card-value" id="grossProfit">—</div>
+        <div id="grossProfit" class="card-value">—</div>
         <div class="card-note">Выручка минус прямые расходы</div>
       </article>
 
       <article class="card orange">
         <div class="card-title">Операционная прибыль</div>
-        <div class="card-value" id="operatingProfit">—</div>
+        <div id="operatingProfit" class="card-value">—</div>
         <div class="card-note">После операционных расходов</div>
       </article>
 
       <article class="card">
         <div class="card-title">Чистый денежный поток</div>
-        <div class="card-value" id="cashFlow">—</div>
+        <div id="cashFlow" class="card-value">—</div>
         <div class="card-note">Поступления минус выплаты</div>
       </article>
 
       <article class="card orange">
         <div class="card-title">Дебиторская задолженность</div>
-        <div class="card-value" id="receivables">—</div>
+        <div id="receivables" class="card-value">—</div>
         <div class="card-note">Остаток к получению</div>
       </article>
 
       <article class="card red">
         <div class="card-title">Кредиторская задолженность</div>
-        <div class="card-value" id="payables">—</div>
+        <div id="payables" class="card-value">—</div>
         <div class="card-note">Остаток к оплате</div>
       </article>
 
       <article class="card green">
         <div class="card-title">Количество операций</div>
-        <div class="card-value" id="operationCount">—</div>
+        <div id="operationCount" class="card-value">—</div>
         <div class="card-note">С учётом фильтров</div>
       </article>
     </section>
@@ -414,7 +377,7 @@
       </article>
 
       <article class="panel">
-        <h2>Задолженность по статусам</h2>
+        <h2>Задолженность</h2>
         <div id="debtChart"></div>
       </article>
     </section>
@@ -435,6 +398,7 @@
               <th>Сумма, ₽</th>
             </tr>
           </thead>
+
           <tbody id="operationsTable">
             <tr>
               <td colspan="7" class="loading">Загрузка операций…</td>
@@ -449,18 +413,14 @@
     const SHEET_ID = "1TWE3DyK_leji6OBbgaRs0UMxrNiknj-GiERXWbhJQAk";
     const SHEET_NAME = "Операции";
 
-    const SHEET_URL =
-      "https://docs.google.com/spreadsheets/d/" +
-      SHEET_ID +
-      "/gviz/tq?tqx=out:json&sheet=" +
-      encodeURIComponent(SHEET_NAME);
-
-    const monthOrder = [
-      "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-      "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+    const MONTHS = [
+      "Январь", "Февраль", "Март", "Апрель",
+      "Май", "Июнь", "Июль", "Август",
+      "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
     ];
 
     let operations = [];
+    let loadedScript = null;
 
     const filters = {
       project: document.getElementById("projectFilter"),
@@ -478,15 +438,15 @@
     }
 
     function shortMoney(value) {
-      const abs = Math.abs(value || 0);
+      const absolute = Math.abs(value || 0);
 
-      if (abs >= 1000000) {
+      if (absolute >= 1000000) {
         return (value / 1000000).toLocaleString("ru-RU", {
           maximumFractionDigits: 1
         }) + " млн ₽";
       }
 
-      if (abs >= 1000) {
+      if (absolute >= 1000) {
         return (value / 1000).toLocaleString("ru-RU", {
           maximumFractionDigits: 0
         }) + " тыс. ₽";
@@ -495,7 +455,7 @@
       return money(value);
     }
 
-    function number(value) {
+    function toNumber(value) {
       if (typeof value === "number") return value;
       if (!value) return 0;
 
@@ -507,15 +467,15 @@
       ) || 0;
     }
 
-    function cellValue(cell) {
+    function value(cell) {
       if (!cell) return "";
       return cell.f ?? cell.v ?? "";
     }
 
-    function formatDate(value) {
-      if (!value) return "";
+    function formatDate(raw) {
+      if (!raw) return "";
 
-      const match = String(value).match(/Date\((\d+),(\d+),(\d+)\)/);
+      const match = String(raw).match(/Date\((\d+),(\d+),(\d+)\)/);
 
       if (match) {
         const date = new Date(
@@ -527,15 +487,7 @@
         return date.toLocaleDateString("ru-RU");
       }
 
-      return String(value);
-    }
-
-    function parseGoogleResponse(text) {
-      const jsonText = text
-        .replace(/^[\s\S]*?google\.visualization\.Query\.setResponse\(/, "")
-        .replace(/\);\s*$/, "");
-
-      return JSON.parse(jsonText);
+      return String(raw);
     }
 
     function unique(values) {
@@ -544,23 +496,35 @@
       );
     }
 
-    function addOptions(select, values) {
-      const current = select.value;
+    function fillSelect(select, values) {
+      const selected = select.value;
       const firstOption = select.options[0].outerHTML;
 
       select.innerHTML = firstOption;
 
-      values.forEach(value => {
+      values.forEach(item => {
         const option = document.createElement("option");
-        option.value = value;
-        option.textContent = value;
+        option.value = item;
+        option.textContent = item;
         select.appendChild(option);
       });
 
-      select.value = current;
+      select.value = selected;
     }
 
-    function getFilteredOperations() {
+    function populateFilters() {
+      fillSelect(filters.project, unique(operations.map(item => item.project)));
+
+      fillSelect(
+        filters.month,
+        MONTHS.filter(month => operations.some(item => item.month === month))
+      );
+
+      fillSelect(filters.manager, unique(operations.map(item => item.manager)));
+      fillSelect(filters.counterparty, unique(operations.map(item => item.counterparty)));
+    }
+
+    function filteredOperations() {
       return operations.filter(item =>
         (!filters.project.value || item.project === filters.project.value) &&
         (!filters.month.value || item.month === filters.month.value) &&
@@ -569,48 +533,48 @@
       );
     }
 
-    function sum(items, predicate) {
+    function sum(items, condition) {
       return items
-        .filter(predicate)
+        .filter(condition)
         .reduce((total, item) => total + item.amountRub, 0);
     }
 
-    function sumField(items, predicate, field) {
+    function sumField(items, condition, field) {
       return items
-        .filter(predicate)
-        .reduce((total, item) => total + number(item[field]), 0);
+        .filter(condition)
+        .reduce((total, item) => total + toNumber(item[field]), 0);
     }
 
-    function groupSum(items, key, predicate) {
-      const grouped = {};
+    function grouped(items, key, condition) {
+      const result = {};
 
-      items.filter(predicate).forEach(item => {
+      items.filter(condition).forEach(item => {
         const name = item[key] || "Без категории";
-        grouped[name] = (grouped[name] || 0) + item.amountRub;
+        result[name] = (result[name] || 0) + item.amountRub;
       });
 
-      return Object.entries(grouped)
-        .map(([name, value]) => ({ name, value }))
-        .sort((a, b) => b.value - a.value);
+      return Object.entries(result)
+        .map(([name, amount]) => ({ name, amount }))
+        .sort((a, b) => b.amount - a.amount);
     }
 
-    function renderBars(elementId, rows, colorClass) {
-      const container = document.getElementById(elementId);
+    function renderBars(id, rows, color) {
+      const container = document.getElementById(id);
 
       if (!rows.length) {
-        container.innerHTML = "<p class='loading'>Нет данных по выбранным фильтрам.</p>";
+        container.innerHTML = "<p class='loading'>Нет данных.</p>";
         return;
       }
 
-      const max = Math.max(...rows.map(row => row.value), 1);
+      const max = Math.max(...rows.map(row => row.amount), 1);
 
       container.innerHTML = rows.map(row => `
         <div class="chart-row">
           <div class="chart-label" title="${row.name}">${row.name}</div>
           <div class="bar-bg">
-            <div class="bar ${colorClass}" style="width: ${(row.value / max) * 100}%"></div>
+            <div class="bar ${color}" style="width: ${(row.amount / max) * 100}%"></div>
           </div>
-          <div class="chart-value">${shortMoney(row.value)}</div>
+          <div class="chart-value">${shortMoney(row.amount)}</div>
         </div>
       `).join("");
     }
@@ -632,13 +596,13 @@
       const grossProfit = revenue - directExpenses;
       const operatingProfit = grossProfit - operatingExpenses;
 
-      const incomePayments = sumField(
+      const received = sumField(
         items,
         item => item.type === "Доход",
         "paidAmount"
       );
 
-      const expensePayments = sumField(
+      const paid = sumField(
         items,
         item => item.type === "Расход",
         "paidAmount"
@@ -660,79 +624,86 @@
       document.getElementById("expenses").textContent = money(expenses);
       document.getElementById("grossProfit").textContent = money(grossProfit);
       document.getElementById("operatingProfit").textContent = money(operatingProfit);
-      document.getElementById("cashFlow").textContent = money(incomePayments - expensePayments);
+      document.getElementById("cashFlow").textContent = money(received - paid);
       document.getElementById("receivables").textContent = money(receivables);
       document.getElementById("payables").textContent = money(payables);
-      document.getElementById("operationCount").textContent = items.length.toLocaleString("ru-RU");
+      document.getElementById("operationCount").textContent =
+        items.length.toLocaleString("ru-RU");
     }
 
-    function renderMonthlyChart(items) {
-      const rows = monthOrder.map(month => {
+    function renderCharts(items) {
+      const monthly = MONTHS.map(month => {
         const income = sum(items, item =>
           item.month === month && item.type === "Доход"
         );
 
-        const expense = sum(items, item =>
+        const expenses = sum(items, item =>
           item.month === month && item.type === "Расход"
         );
 
         return {
           name: month.slice(0, 3) + ".",
-          value: income - expense
+          amount: Math.abs(income - expenses)
         };
-      }).filter(row => row.value !== 0);
+      }).filter(row => row.amount > 0);
 
-      renderBars("monthlyChart", rows, "green");
-    }
-
-    function renderCharts(items) {
-      renderMonthlyChart(items);
+      renderBars("monthlyChart", monthly, "green");
 
       renderBars(
         "expenseChart",
-        groupSum(items, "article", item => item.type === "Расход").slice(0, 5),
+        grouped(items, "article", item => item.type === "Расход").slice(0, 5),
         "red"
       );
 
       renderBars(
         "projectChart",
-        groupSum(items, "project", item => item.type === "Доход").slice(0, 5),
+        grouped(items, "project", item => item.type === "Доход").slice(0, 5),
         "green"
       );
 
-      const debtRows = [
-        {
-          name: "Дебиторская",
-          value: sumField(items, item => item.type === "Доход", "balanceDue")
-        },
-        {
-          name: "Кредиторская",
-          value: sumField(items, item => item.type === "Расход", "balanceDue")
-        }
-      ].filter(row => row.value !== 0);
-
-      renderBars("debtChart", debtRows, "orange");
+      renderBars(
+        "debtChart",
+        [
+          {
+            name: "Дебиторская",
+            amount: sumField(
+              items,
+              item => item.type === "Доход",
+              "balanceDue"
+            )
+          },
+          {
+            name: "Кредиторская",
+            amount: sumField(
+              items,
+              item => item.type === "Расход",
+              "balanceDue"
+            )
+          }
+        ].filter(row => row.amount > 0),
+        "orange"
+      );
     }
 
     function renderTable(items) {
-      const body = document.getElementById("operationsTable");
+      const table = document.getElementById("operationsTable");
 
       const latest = [...items]
         .sort((a, b) => String(b.dateRaw).localeCompare(String(a.dateRaw)))
         .slice(0, 15);
 
       if (!latest.length) {
-        body.innerHTML = `
+        table.innerHTML = `
           <tr>
-            <td colspan="7" class="loading">По выбранным фильтрам операций нет.</td>
+            <td colspan="7" class="loading">Нет операций по выбранным фильтрам.</td>
           </tr>
         `;
         return;
       }
 
-      body.innerHTML = latest.map(item => `
+      table.innerHTML = latest.map(item => `
         <tr>
-          <td>${item.date}</td>
+          <td>${item.date || "—"}</td>
           <td>${item.project || "—"}</td>
           <td>${item.counterparty || "—"}</td>
           <td class="${item.type === "Доход" ? "income" : "expense"}">
@@ -748,17 +719,98 @@
     }
 
     function render() {
-      const items = getFilteredOperations();
-
+      const items = filteredOperations();
       renderCards(items);
       renderCharts(items);
       renderTable(items);
     }
 
-    function fillFilters() {
-      addOptions(filters.project, unique(operations.map(item => item.project)));
-      addOptions(filters.month, monthOrder.filter(month =>
-        operations.some(item => item.month === month)
-      ));
-      addOptions(filters.manager, unique(operations.map(item => item.manager)));
-      addOptions(filters.counterparty, unique(operations.map(item => item.counterparty)));
+    function showError(message) {
+      const error = `
+        <div class="error">
+          <strong>Не удалось загрузить данные.</strong><br>
+          ${message}<br><br>
+          Проверьте в Google Таблице:
+          «Все, у кого есть ссылка» → «Читатель».
+        </div>
+      `;
+
+      document.getElementById("monthlyChart").innerHTML = error;
+      document.getElementById("expenseChart").innerHTML = error;
+      document.getElementById("projectChart").innerHTML = error;
+      document.getElementById("debtChart").innerHTML = error;
+
+      document.getElementById("operationsTable").innerHTML = `
+        <tr>
+          <td colspan="7">${error}</td>
+        </tr>
+      `;
+
+      document.getElementById("updated").textContent = "Ошибка загрузки";
+    }
+
+    window.handleSheetData = function(response) {
+      try {
+        const rows = response.table.rows || [];
+
+        operations = rows
+          .map(row => {
+            const cells = row.c || [];
+
+            return {
+              id: value(cells[0]),
+              dateRaw: value(cells[1]),
+              date: formatDate(value(cells[1])),
+              month: value(cells[2]),
+              year: value(cells[3]),
+              project: value(cells[4]),
+              counterparty: value(cells[5]),
+              type: value(cells[6]),
+              category: value(cells[7]),
+              article: value(cells[8]),
+              planFact: value(cells[10]),
+              amountRub: toNumber(value(cells[17])),
+              paymentStatus: value(cells[21]),
+              paidAmount: toNumber(value(cells[22])),
+              balanceDue: toNumber(value(cells[23])),
+              manager: value(cells[24])
+            };
+          })
+          .filter(item =>
+            item.id &&
+            ["Доход", "Расход"].includes(item.type) &&
+            item.planFact === "Факт"
+          );
+
+        if (!operations.length) {
+          throw new Error(
+            "В листе «Операции» не найдены строки с типом «Доход» или «Расход» и статусом «Факт»."
+          );
+        }
+
+        populateFilters();
+        render();
+
+        document.getElementById("updated").textContent =
+          "Обновлено: " + new Date().toLocaleString("ru-RU");
+      } catch (error) {
+        console.error(error);
+        showError(error.message);
+      }
+    };
+
+    function loadData() {
+      document.getElementById("updated").textContent = "Загрузка данных…";
+
+      if (loadedScript) {
+        loadedScript.remove();
+      }
+
+      const script = document.createElement("script");
+
+      script.src =
+        "https://docs.google.com/spreadsheets/d/" +
+        SHEET_ID +
+        "/gviz/tq?sheet=" +
+        encodeURIComponent(SHEET_NAME) +
+        "&tqx=responseHandler:handleSheetData" +
