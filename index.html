@@ -45,7 +45,26 @@
       font-size: 30px;
     }
 
-    .sub, .updated { color: var(--muted); }
+    .sub, .updated {
+      color: var(--muted);
+    }
+
+    .plan-fact-link {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 10px 15px;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 14px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background .2s ease;
+    }
+
+    .plan-fact-link:hover {
+      background: #1d4ed8;
+    }
 
     .updated {
       text-align: right;
@@ -256,6 +275,10 @@
       <div>
         <h1>Финансовый дашборд</h1>
         <p class="sub">Данные автоматически загружаются из Google Таблицы</p>
+
+        <a href="./plan-fact.html" class="plan-fact-link">
+          План-факт анализ →
+        </a>
       </div>
 
       <div class="updated">
@@ -267,22 +290,30 @@
     <section class="filters">
       <div>
         <label for="project">Проект</label>
-        <select id="project"><option value="">Все проекты</option></select>
+        <select id="project">
+          <option value="">Все проекты</option>
+        </select>
       </div>
 
       <div>
         <label for="month">Месяц</label>
-        <select id="month"><option value="">Все месяцы</option></select>
+        <select id="month">
+          <option value="">Все месяцы</option>
+        </select>
       </div>
 
       <div>
         <label for="manager">Менеджер</label>
-        <select id="manager"><option value="">Все менеджеры</option></select>
+        <select id="manager">
+          <option value="">Все менеджеры</option>
+        </select>
       </div>
 
       <div>
         <label for="counterparty">Контрагент</label>
-        <select id="counterparty"><option value="">Все контрагенты</option></select>
+        <select id="counterparty">
+          <option value="">Все контрагенты</option>
+        </select>
       </div>
     </section>
 
@@ -688,6 +719,7 @@
         );
 
         fillSelect(filters.manager, unique(operations.map(item => item.manager)));
+
         fillSelect(
           filters.counterparty,
           unique(operations.map(item => item.counterparty))
@@ -706,7 +738,9 @@
     function loadData() {
       document.querySelector("#updated").textContent = "Загрузка данных…";
 
-      if (loadedScript) loadedScript.remove();
+      if (loadedScript) {
+        loadedScript.remove();
+      }
 
       loadedScript = document.createElement("script");
 
