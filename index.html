@@ -3,10 +3,264 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Finance Dashboard</title>
+  <title>Мой финансовый дашборд</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 32px 16px;
+    }
+
+    h1 { margin: 0 0 8px; }
+    .subtitle { margin: 0 0 28px; color: #6b7280; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    .card p {
+      margin: 0 0 8px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .income h2 { color: #16a34a; }
+    .expense h2 { color: #dc2626; }
+    .balance h2 { color: #2563eb; }
+
+    .panel {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1fr 140px 130px auto;
+      gap: 12px;
+      margin: 16px 0 24px;
+    }
+
+    input, select, button {
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 11px 12px;
+      font-size: 15px;
+    }
+
+    button {
+      border: 0;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover { background: #1d4ed8; }
+
+    .delete {
+      background: #fee2e2;
+      color: #b91c1c;
+      padding: 7px 10px;
+    }
+
+    .delete:hover { background: #fecaca; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 13px 8px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    th {
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .amount-income { color: #16a34a; font-weight: bold; }
+    .amount-expense { color: #dc2626; font-weight: bold; }
+
+    .empty {
+      text-align: center;
+      color: #6b7280;
+      padding: 24px;
+    }
+
+    @media (max-width: 700px) {
+      .cards { grid-template-columns: 1fr; }
+      form { grid-template-columns: 1fr; }
+      .container { padding: 20px 12px; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Мой финансовый дашборд</h1>
-  <p>Здесь  будет учёт доходов и расходов.</p>
+  <main class="container">
+    <h1>Мой финансовый дашборд</h1>
+    <p class="subtitle">Доходы, расходы и текущий баланс</p>
+
+    <section class="cards">
+      <article class="card income">
+        <p>Доходы</p>
+        <h2 id="income">0 ₽</h2>
+      </article>
+
+      <article class="card expense">
+        <p>Расходы</p>
+        <h2 id="expense">0 ₽</h2>
+      </article>
+
+      <article class="card balance">
+        <p>Баланс</p>
+        <h2 id="balance">0 ₽</h2>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>Добавить операцию</h2>
+
+      <form id="transactionForm">
+        <input id="description" type="text" placeholder="Например: Зарплата или Продукты" required />
+        <input id="amount" type="number" min="1" step="0.01" placeholder="Сумма" required />
+        <select id="type">
+          <option value="income">Доход</option>
+          <option value="expense">Расход</option>
+        </select>
+        <button type="submit">Добавить</button>
+      </form>
+
+      <h2>История операций</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Описание</th>
+            <th>Тип</th>
+            <th>Сумма</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="transactions"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById("transactionForm");
+    const descriptionInput = document.getElementById("description");
+    const amountInput = document.getElementById("amount");
+    const typeInput = document.getElementById("type");
+    const transactionsBody = document.getElementById("transactions");
+
+    let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+
+    function formatMoney(value) {
+      return new Intl.NumberFormat("ru-RU", {
+        style: "currency",
+        currency: "RUB",
+        maximumFractionDigits: 2
+      }).format(value);
+    }
+
+    function saveTransactions() {
+      localStorage.setItem("transactions", JSON.stringify(transactions));
+    }
+
+    function render() {
+      const income = transactions
+        .filter(item => item.type === "income")
+        .reduce((sum, item) => sum + item.amount, 0);
+
+      const expense = transactions
+        .filter(item => item.type === "expense")
+        .reduce((sum, item) => sum + item.amount, 0);
+
+      document.getElementById("income").textContent = formatMoney(income);
+      document.getElementById("expense").textContent = formatMoney(expense);
+      document.getElementById("balance").textContent = formatMoney(income - expense);
+
+      if (transactions.length === 0) {
+        transactionsBody.innerHTML = `
+          <tr>
+            <td colspan="4" class="empty">Операций пока нет</td>
+          </tr>
+        `;
+        return;
+      }
+
+      transactionsBody.innerHTML = transactions
+        .map(item => `
+          <tr>
+            <td>${item.description}</td>
+            <td>${item.type === "income" ? "Доход" : "Расход"}</td>
+            <td class="${item.type === "income" ? "amount-income" : "amount-expense"}">
+              ${item.type === "income" ? "+" : "−"} ${formatMoney(item.amount)}
+            </td>
+            <td>
+              <button class="delete" onclick="removeTransaction(${item.id})">Удалить</button>
+            </td>
+          </tr>
+        `)
+        .join("");
+    }
+
+    function removeTransaction(id) {
+      transactions = transactions.filter(item => item.id !== id);
+      saveTransactions();
+      render();
+    }
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+
+      const description = descriptionInput.value.trim();
+      const amount = Number(amountInput.value);
+      const type = typeInput.value;
+
+      if (!description || amount <= 0) return;
+
+      transactions.unshift({
+        id: Date.now(),
+        description,
+        amount,
+        type
+      });
+
+      saveTransactions();
+      form.reset();
+      render();
+    });
+
+    render();
+  </script>
 </body>
 </html>
