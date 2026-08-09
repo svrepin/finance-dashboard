@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>План-факт анализ</title>
+
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --panel: #ffffff;
+      --text: #172033;
+      --muted: #667085;
+      --line: #e6eaf0;
+      --blue: #2563eb;
+      --green: #16a34a;
+      --red: #dc2626;
+      --orange: #ea580c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: auto;
+      padding: 32px 18px 50px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+
+    .subtitle, .updated {
+      color: var(--muted);
+    }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 12px;
+      color: var(--blue);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .updated {
+      text-align: right;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 8px;
+      padding: 9px 14px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .filter, .card, .panel {
+      background: var(--panel);
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(25, 45, 80, .08);
+    }
+
+    .filter {
+      padding: 18px;
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    select {
+      width: 100%;
+      max-width: 440px;
+      padding: 10px;
+      border: 1px solid #d7ddea;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 14px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .card {
+      padding: 20px;
+      border-left: 5px solid var(--blue);
+    }
+
+    .card.green { border-left-color: var(--green); }
+    .card.red { border-left-color: var(--red); }
+    .card.orange { border-left-color: var(--orange); }
+
+    .card-title {
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .card-value {
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    .card-note {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .panel {
+      padding: 20px;
+      margin-bottom: 22px;
+    }
+
+    .panel h2 {
+      margin: 0 0 16px;
+      font-size: 18px;
+    }
+
+    .scroll {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 1080px;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    td.money, td.percent {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .positive { color: var(--green); font-weight: bold; }
+    .negative { color: var(--red); font-weight: bold; }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 99px;
+      background: #eef2ff;
+      color: #4338ca;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .loading {
+      padding: 35px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .error {
+      padding: 15px;
+      border-radius: 10px;
+      background: #fef2f2;
+      color: #b91c1c;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 950px) {
+      .cards { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 20px 12px; }
+      .topbar { display: block; }
+      .updated { margin-top: 14px; text-align: left; }
+      .cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <a class="back" href="./index.html">← Вернуться к финансовому дашборду</a>
+
+    <header class="topbar">
+      <div>
+        <h1>План-факт анализ</h1>
+        <p class="subtitle">Сравнение плановых и фактических показателей по проектам</p>
+      </div>
+
+      <div class="updated">
+        <div id="updated">Загрузка данных…</div>
+        <button id="reload">Обновить</button>
+      </div>
+    </header>
+
+    <section class="filter">
+      <label for="projectFilter">Проект</label>
+      <select id="projectFilter">
+        <option value="">Все проекты</option>
+      </select>
+    </section>
+
+    <section class="cards">
+      <article class="card green">
+        <div class="card-title">Доходы: план</div>
+        <div class="card-value" id="incomePlan">—</div>
+        <div class="card-note">Сумма по выбранным проектам</div>
+      </article>
+
+      <article class="card green">
+        <div class="card-title">Доходы: факт</div>
+        <div class="card-value" id="incomeFact">—</div>
+        <div class="card-note">Фактическая выручка</div>
+      </article>
+
+      <article class="card orange">
+        <div class="card-title">Отклонение доходов</div>
+        <div class="card-value" id="incomeDeviation">—</div>
+        <div class="card-note">Факт минус план</div>
+      </article>
+
+      <article class="card red">
+        <div class="card-title">Расходы: факт</div>
+        <div class="card-value" id="expenseFact">—</div>
+        <div class="card-note">Фактические расходы</div>
+      </article>
+
+      <article class="card">
+        <div class="card-title">Валовая прибыль: факт</div>
+        <div class="card-value" id="grossFact">—</div>
+        <div class="card-note">Доходы минус прямые расходы</div>
+      </article>
+
+      <article class="card">
+        <div class="card-title">Валовая маржа: факт</div>
+        <div class="card-value" id="grossMarginFact">—</div>
+        <div class="card-note">Доля валовой прибыли в выручке</div>
+      </article>
+
+      <article class="card orange">
+        <div class="card-title">Операционная прибыль: факт</div>
+        <div class="card-value" id="operatingFact">—</div>
+        <div class="card-note">После операционных расходов</div>
+      </article>
+
+      <article class="card orange">
+        <div class="card-title">Отклонение опер. прибыли</div>
+        <div class="card-value" id="operatingDeviation">—</div>
+        <div class="card-note">Факт минус план</div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>План-факт по проектам</h2>
+
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Проект</th>
+              <th>План доходов</th>
+              <th>Факт доходов</th>
+              <th>Отклонение</th>
+              <th>План расходов</th>
+              <th>Факт расходов</th>
+              <th>План валовой прибыли</th>
+              <th>Факт валовой прибыли</th>
+              <th>Факт. маржа</th>
+              <th>План опер. прибыли</th>
+              <th>Факт опер. прибыли</th>
+            </tr>
+          </thead>
+
+          <tbody id="table">
+            <tr>
+              <td colspan="11" class="loading">Загрузка данных…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const SHEET_ID = "1TWE3DyK_leji6OBbgaRs0UMxrNiknj-GiERXWbhJQAk";
+    const SHEET_NAME = "План-Факт";
+
+    let projects = [];
+    let loadedScript;
+    let timeout;
+
+    const projectFilter = document.getElementById("projectFilter");
+
+    function cellValue(cell) {
+      return cell ? (cell.f ?? cell.v ?? "") : "";
+    }
+
+    function number(value) {
+      if (typeof value === "number") return value;
+
+      return Number(
+        String(value || 0)
+          .replace(/\s/g, "")
