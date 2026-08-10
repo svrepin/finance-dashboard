@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Финансовый дашборд">
+  <defs>
+    <linearGradient id="g" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#1e40af"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="16" fill="url(#g)"/>
+
+  <path
+    d="M15 44V32M25 44V22M35 44V29M45 44V16"
+    stroke="#ffffff"
+    stroke-width="6"
+    stroke-linecap="round"
+  />
+
+  <path
+    d="M14 27l11-8 10 5 15-12"
+    fill="none"
+    stroke="#86efac"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <path
+    d="M45 12h5v5"
+    fill="none"
+    stroke="#86efac"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
